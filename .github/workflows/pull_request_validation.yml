@@ -1,0 +1,22 @@
+name: pull_request_validation
+
+on: [push]
+
+jobs:
+  Run_validations:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          tools: composer:v2
+          php-version: '8.1'
+          extensions: intl, imagick
+
+      - name: Install composer dependencies
+        run: composer install --no-ansi --no-interaction --no-suggest --no-progress --prefer-dist
+
+      - name: Grump Validation
+        run: ./vendor/bin/grumphp run -c grumphp.yml
